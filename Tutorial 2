@@ -1,0 +1,38 @@
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# Sample dataset
+data = {
+    'Attendance': [90, 75, 95, 80, 60, 85, 70, 92, 78, 65],
+    'Homework Completion': [85, 70, 90, 75, 60, 80, 65, 88, 72, 62],
+    'Pass/Fail (Y)': [1, 0, 1, 1, 0, 1, 0, 1, 1, 0]
+}
+
+# Convert data into numpy arrays
+X = np.array(list(zip(data['Attendance'], data['Homework Completion'])))
+y = np.array(data['Pass/Fail (Y)'])
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize and fit the logistic regression model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate model accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Model Accuracy: {accuracy}")
+
+# Predict for unknown YP's
+unknown_YPs = np.array([[88, 82], [72, 68]])  # Example unknown data points
+predictions = model.predict(unknown_YPs)
+
+print("Predictions for unknown YP's:")
+for i, prediction in enumerate(predictions):
+    print(f"YP {i+1}: {prediction}")
+
