@@ -1,0 +1,30 @@
+import pandas as pd
+import statsmodels.api as sm
+
+# Load the dataset
+file_path = "setadv.csv"
+df = pd.read_csv(file_path)
+
+# Define predictors (TV, radio, newspaper) and response variable (sales)
+X = df[['TV', 'radio', 'newspaper']]
+y = df['sales']
+
+# Add a constant for the intercept
+X = sm.add_constant(X)
+
+# Fit the regression model
+model = sm.OLS(y, X).fit()
+
+# Extract relevant statistics
+rse = model.mse_resid ** 0.5  # Residual Standard Error
+r_squared = model.rsquared    # R-squared
+f_statistic = model.fvalue    # F-statistic
+
+# Print the results
+print(f"Residual Standard Error (RSE): {rse:.4f}")
+print(f"R-squared (R²): {r_squared:.4f}")
+print(f"F-statistic: {f_statistic:.4f}")
+
+# Print the full regression summary
+print(model.summary())
+ 
