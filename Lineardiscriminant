@@ -1,0 +1,39 @@
+import numpy as np  # Load the NumPy library for numerical operations
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis  # Import LDA from sklearn
+
+# Sample feature matrix with two samples and two features
+data_points = np.array([[2, 3], [5, 6]])  
+class_labels = np.array([0, 1])  # Labels indicating class membership
+
+# === Using scikit-learn's built-in LDA ===
+# Create the LDA model specifying 1 output component
+lda_model = LinearDiscriminantAnalysis(n_components=1)
+
+# Train and transform the data using LDA
+projected_data_sklearn = lda_model.fit_transform(data_points, class_labels)
+
+# Output the LDA result from scikit-learn
+print("Transformed Data using scikit-learn LDA:\n", projected_data_sklearn)
+
+
+# === Manual computation using matrix operations ===
+
+# Calculate the mean vector for each class
+mean_class0 = data_points[class_labels == 0].mean(axis=0)
+mean_class1 = data_points[class_labels == 1].mean(axis=0)
+
+# Compute the within-class scatter matrix (scatter inside each class)
+scatter_within = np.cov(data_points.T)
+
+# Compute the between-class scatter matrix (distance between class means)
+mean_difference = (mean_class1 - mean_class0).reshape(-1, 1)
+scatter_between = np.dot(mean_difference, mean_difference.T)
+
+# Solve the eigenvalue-eigenvector problem for LDA
+eigenvalues, eigenvectors = np.linalg.eig(np.linalg.inv(scatter_within).dot(scatter_between))
+
+# Identify the eigenvector associated with the largest eigenvalue
+optimal_direction = eigenvectors[:, np.argmax(eigenvalues)]
+
+# Display the direction vector for LDA projection
+print("LDA Projection Vector (manual calculation):\n", optimal_direction)
