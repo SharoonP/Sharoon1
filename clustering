@@ -1,0 +1,24 @@
+import numpy as np  # For handling numerical arrays and operations
+import pandas as pd  # For working with tabular data
+from sklearn.model_selection import train_test_split  # To split data into train and test sets
+from sklearn.metrics import mean_squared_error  # To measure model prediction error
+from scipy.cluster.hierarchy import linkage, dendrogram  # For performing and visualizing hierarchical clustering
+import matplotlib.pyplot as plt  # For plotting graphs
+
+# Load dataset from file
+dataset_path = "Advertising.csv"  # Path to the CSV file
+data = pd.read_csv(dataset_path)  # Load data into a DataFrame
+
+# Select features to use for clustering
+features = data[['TV', 'radio', 'newspaper']].values  # Extract selected columns as NumPy array
+
+# Perform hierarchical clustering using complete linkage method
+cluster_links = linkage(features, method='complete')
+
+# Plot the resulting dendrogram
+plt.figure(figsize=(10, 5))  # Set the size of the plot
+plt.title("Dendrogram - Complete Linkage Clustering")  # Set the plot title
+plt.xlabel("Sample Index")  # Label for x-axis
+plt.ylabel("Cluster Distance")  # Label for y-axis
+dendrogram(cluster_links)  # Create dendrogram from linkage matrix
+plt.show()  # Show the plot
