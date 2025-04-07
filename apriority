@@ -1,0 +1,39 @@
+import numpy as np  # NumPy for numerical operations
+import pandas as pd  # pandas for handling data in tabular format
+from sklearn.model_selection import train_test_split  # for splitting datasets
+from sklearn.metrics import mean_squared_error  # for evaluating prediction errors
+from scipy.cluster.hierarchy import linkage, dendrogram  # for performing hierarchical clustering
+import matplotlib.pyplot as plt  # for creating plots and visualizations
+from mlxtend.frequent_patterns import apriori, association_rules  # for market basket analysis
+
+# Define a list of customer purchase baskets
+shopping_baskets = [
+    ['milk', 'bread', 'nuts', 'apple'],
+    ['milk', 'bread', 'nuts'],
+    ['milk', 'bread'],
+    ['milk', 'bread', 'apple'],
+    ['bread', 'nuts', 'apple'],
+    ['bread', 'apple'],
+    ['milk', 'bread', 'nuts', 'apple'],
+    ['milk', 'apple']
+]
+
+# Extract unique items from all baskets
+unique_items = sorted(set(item for basket in shopping_baskets for item in basket))
+
+# Convert transaction data into a binary DataFrame (one-hot encoded)
+basket_df = pd.DataFrame([{item: (item in basket) for item in unique_items} for basket in shopping_baskets])
+
+# Run Apriori algorithm to identify frequent item combinations
+frequent_sets = apriori(basket_df, min_support=0.3, use_colnames=True)
+
+# Derive association rules from the frequent itemsets
+assoc_rules = association_rules(frequent_sets, metric="lift", min_threshold=1.0)
+
+# Display frequent itemsets
+print("Discovered Frequent Itemsets:")
+print(frequent_sets)
+
+# Display the resulting association rules
+print("\nDerived Association Rules:")
+print(assoc_rules)
